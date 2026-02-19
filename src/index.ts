@@ -1,11 +1,10 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { WebSocketServerTransport } from "@modelcontextprotocol/sdk/server/websocket.js";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { z } from "zod";
 import { config } from "./config.js";
 import { EvolutionApiService } from "./services/evolutionApiService.js";
 import * as http from "http";
-import { WebSocketServer } from "ws";
 import "dotenv/config";
 
 // Inicializa o serviço da Evolution API
@@ -738,23 +737,39 @@ export async function startServer() {
   }
 }
 
-// Inicia o servidor usando WebSocket
+// Inicia o servidor usando SSE (Server-Sent Events)
 export async function startWebSocketServer(port: number = 3000) {
-  console.log(`Iniciando servidor MCP para Evolution API via WebSocket na porta ${port}...`);
+  console.log(`Iniciando servidor MCP para Evolution API via SSE na porta ${port}...`);
   try {
-    const httpServer = http.createServer();
-    const wss = new WebSocketServer({ server: httpServer });
-    
-    const transport = new WebSocketServerTransport(wss);
-    await server.connect(transport);
-    
-    httpServer.listen(port, () => {
-      console.log(`Servidor MCP WebSocket iniciado com sucesso na porta ${port}!`);
+    const transports: Record<string, SSEServerTransport> = {};
+
+    const httpServer = http.createServer(async (req, res) => {
+      if (req.method === "GET" && req.url === "/sse") {
+        const transport = new SSEServerTransport("/message", res);
+        transports[transport.sessionId] = transport;
+        res.on("close", () => { delete transports[transport.sessionId]; });
+        await server.connect(transport);
+      } else if (req.method === "POST" && req.url?.startsWith("/message")) {
+        const url = new URL(req.url, `http://localhost:${port}`);
+        const sessionId = url.searchParams.get("sessionId") ?? "";
+        const transport = transports[sessionId];
+        if (transport) {
+          await transport.handlePostMessage(req, res);
+        } else {
+          res.writeHead(404).end("Session not found");
+        }
+      } else {
+        res.writeHead(404).end("Not found");
+      }
     });
-    
-    return { server, httpServer, wss };
+
+    httpServer.listen(port, () => {
+      console.log(`Servidor MCP SSE iniciado com sucesso na porta ${port}!`);
+    });
+
+    return { server, httpServer };
   } catch (error) {
-    console.error("Erro ao iniciar servidor MCP WebSocket:", error);
+    console.error("Erro ao iniciar servidor MCP SSE:", error);
     throw error;
   }
 }
