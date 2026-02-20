@@ -67,6 +67,7 @@ server.tool("getInstanceStatus",
 );
 
 // Adiciona ferramenta para definir presença
+// @ts-ignore -- TS2589: SDK 1.26+ suporta Zod v3/v4 causando inferência recursiva excessiva
 server.tool("setPresence",
   { 
     presence: z.enum(["available", "unavailable", "composing", "recording", "paused"])
@@ -141,6 +142,7 @@ server.tool("restartInstance",
 // ===== FERRAMENTAS PARA MENSAGENS =====
 
 // Adiciona ferramenta para enviar mensagem de texto
+// @ts-ignore -- TS2589: SDK 1.26+ suporta Zod v3/v4 causando inferência recursiva excessiva
 server.tool("sendTextMessage",
   { 
     number: z.string().min(1).describe("Número do destinatário no formato internacional (ex: 5511999999999)"),
@@ -172,6 +174,7 @@ server.tool("sendTextMessage",
 );
 
 // Adiciona ferramenta para enviar mídia
+// @ts-ignore -- TS2589: SDK 1.26+ suporta Zod v3/v4 causando inferência recursiva excessiva
 server.tool("sendMedia",
   { 
     number: z.string().min(1).describe("Número do destinatário no formato internacional"),
@@ -209,6 +212,7 @@ server.tool("sendMedia",
 );
 
 // Adiciona ferramenta para enviar mensagem de áudio
+// @ts-ignore -- TS2589: SDK 1.26+ suporta Zod v3/v4 causando inferência recursiva excessiva
 server.tool("sendAudio",
   { 
     number: z.string().min(1).describe("Número do destinatário no formato internacional"),
@@ -271,6 +275,7 @@ server.tool("sendSticker",
 );
 
 // Adiciona ferramenta para enviar localização
+// @ts-ignore -- TS2589: SDK 1.26+ suporta Zod v3/v4 causando inferência recursiva excessiva
 server.tool("sendLocation",
   { 
     number: z.string().min(1).describe("Número do destinatário no formato internacional"),
@@ -334,6 +339,7 @@ server.tool("sendContact",
 );
 
 // Adiciona ferramenta para enviar enquete
+// @ts-ignore -- TS2589: SDK 1.26+ suporta Zod v3/v4 causando inferência recursiva excessiva
 server.tool("sendPoll",
   { 
     number: z.string().min(1).describe("Número do destinatário no formato internacional"),
@@ -420,6 +426,7 @@ server.tool("markMessageAsRead",
 );
 
 // Adiciona ferramenta para arquivar chat
+// @ts-ignore -- TS2589: SDK 1.26+ suporta Zod v3/v4 causando inferência recursiva excessiva
 server.tool("archiveChat",
   { 
     number: z.string().min(1).describe("Número no formato internacional"),

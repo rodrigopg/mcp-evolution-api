@@ -31,7 +31,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "axios": "^1.8.4",
     "dotenv": "^16.4.5",
     "ws": "^8.16.0",
