@@ -339,11 +339,11 @@ export class EvolutionApiService {
   }
 
   // Arquivar chat
-  async archiveChat(number: string): Promise<any> {
+  async archiveChat(number: string, shouldArchive: boolean): Promise<any> {
     try {
       const response = await apiClient.put(`/chat/archiveChat/${this.instanceId}`, {
         phone: number,
-        action: "archive" // ou "unarchive"
+        action: shouldArchive ? "archive" : "unarchive"
       });
       return response.data;
     } catch (error) {

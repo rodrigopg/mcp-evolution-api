@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
+import 'dotenv/config';
 import { startServer, startWebSocketServer } from './index.js';
-import { config } from './config.js';
+import { config, validateConfig } from './config.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+validateConfig();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

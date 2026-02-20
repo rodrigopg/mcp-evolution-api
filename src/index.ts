@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
@@ -5,7 +6,6 @@ import { z } from "zod";
 import { config } from "./config.js";
 import { EvolutionApiService } from "./services/evolutionApiService.js";
 import * as http from "http";
-import "dotenv/config";
 
 // Inicializa o serviço da Evolution API
 const evolutionService = new EvolutionApiService();
@@ -427,7 +427,7 @@ server.tool("archiveChat",
   },
   async ({ number, shouldArchive }) => {
     try {
-      await evolutionService.archiveChat(number);
+      await evolutionService.archiveChat(number, shouldArchive);
       return {
         content: [{ 
           type: "text", 
